@@ -1,0 +1,116 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.css" type="text/css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis-network.min.js"> </script>
+<center>
+<h1>2008 Election Expense Wordnet</h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+
+<style type="text/css">
+
+        #mynetwork {
+            width: 100%;
+            height: 750px;
+            background-color: #123456;
+            border: 1px solid lightgray;
+            position: relative;
+            float: left;
+        }
+
+        
+
+        
+
+        
+</style>
+
+</head>
+
+<body>
+<div id = "mynetwork"></div>
+
+
+<script type="text/javascript">
+
+    // initialize global variables.
+    var edges;
+    var nodes;
+    var network; 
+    var container;
+    var options, data;
+
+    
+    // This method is responsible for drawing the graph, returns the drawn network
+    function drawGraph() {
+        var container = document.getElementById('mynetwork');
+        
+        
+
+        // parsing and collecting nodes and edges from the python
+        nodes = new vis.DataSet([{"color": "red", "font": {"color": "white"}, "id": "obama", "label": "obama", "shape": "dot"}, {"font": {"color": "white"}, "id": "O0", "label": "O0", "shape": "dot"}, {"font": {"color": "white"}, "id": "travel", "label": "travel", "shape": "dot"}, {"font": {"color": "white"}, "id": "lodging", "label": "lodging", "shape": "dot"}, {"font": {"color": "white"}, "id": "agency", "label": "agency", "shape": "dot"}, {"font": {"color": "white"}, "id": "fee", "label": "fee", "shape": "dot"}, {"font": {"color": "white"}, "id": "facility", "label": "facility", "shape": "dot"}, {"font": {"color": "white"}, "id": "catering", "label": "catering", "shape": "dot"}, {"font": {"color": "white"}, "id": "O1", "label": "O1", "shape": "dot"}, {"font": {"color": "white"}, "id": "payroll", "label": "payroll", "shape": "dot"}, {"font": {"color": "white"}, "id": "tax", "label": "tax", "shape": "dot"}, {"font": {"color": "white"}, "id": "computer", "label": "computer", "shape": "dot"}, {"font": {"color": "white"}, "id": "equip", "label": "equip", "shape": "dot"}, {"font": {"color": "white"}, "id": "contribution", "label": "contribution", "shape": "dot"}, {"font": {"color": "white"}, "id": "software", "label": "software", "shape": "dot"}, {"font": {"color": "white"}, "id": "O2", "label": "O2", "shape": "dot"}, {"font": {"color": "white"}, "id": "sound", "label": "sound", "shape": "dot"}, {"font": {"color": "white"}, "id": "lighting", "label": "lighting", "shape": "dot"}, {"font": {"color": "white"}, "id": "staging", "label": "staging", "shape": "dot"}, {"font": {"color": "white"}, "id": "rental", "label": "rental", "shape": "dot"}, {"font": {"color": "white"}, "id": "site", "label": "site", "shape": "dot"}, {"font": {"color": "white"}, "id": "event", "label": "event", "shape": "dot"}, {"font": {"color": "white"}, "id": "O3", "label": "O3", "shape": "dot"}, {"font": {"color": "white"}, "id": "advertising ", "label": "advertising ", "shape": "dot"}, {"font": {"color": "white"}, "id": "line ", "label": "line ", "shape": "dot"}, {"font": {"color": "white"}, "id": "medium ", "label": "medium ", "shape": "dot"}, {"font": {"color": "white"}, "id": "production ", "label": "production ", "shape": "dot"}, {"font": {"color": "white"}, "id": "exp ", "label": "exp ", "shape": "dot"}, {"font": {"color": "white"}, "id": "O4", "label": "O4", "shape": "dot"}, {"font": {"color": "white"}, "id": "per ", "label": "per ", "shape": "dot"}, {"font": {"color": "white"}, "id": "diem ", "label": "diem ", "shape": "dot"}, {"font": {"color": "white"}, "id": "telephone ", "label": "telephone ", "shape": "dot"}, {"font": {"color": "white"}, "id": "printing ", "label": "printing ", "shape": "dot"}, {"font": {"color": "white"}, "id": "office ", "label": "office ", "shape": "dot"}, {"font": {"color": "white"}, "id": "supply", "label": "supply", "shape": "dot"}, {"color": "red", "font": {"color": "white"}, "id": "mccain", "label": "mccain", "shape": "dot"}, {"font": {"color": "white"}, "id": "M0", "label": "M0", "shape": "dot"}, {"font": {"color": "white"}, "id": "printing", "label": "printing", "shape": "dot"}, {"font": {"color": "white"}, "id": "credit", "label": "credit", "shape": "dot"}, {"font": {"color": "white"}, "id": "M1", "label": "M1", "shape": "dot"}, {"font": {"color": "white"}, "id": "equipment", "label": "equipment", "shape": "dot"}, {"font": {"color": "white"}, "id": "petty", "label": "petty", "shape": "dot"}, {"font": {"color": "white"}, "id": "cash", "label": "cash", "shape": "dot"}, {"font": {"color": "white"}, "id": "M2", "label": "M2", "shape": "dot"}, {"font": {"color": "white"}, "id": "transfer", "label": "transfer", "shape": "dot"}, {"font": {"color": "white"}, "id": "beverage", "label": "beverage", "shape": "dot"}, {"font": {"color": "white"}, "id": "food", "label": "food", "shape": "dot"}, {"font": {"color": "white"}, "id": "M3", "label": "M3", "shape": "dot"}, {"font": {"color": "white"}, "id": "consulting", "label": "consulting", "shape": "dot"}, {"font": {"color": "white"}, "id": "gotv", "label": "gotv", "shape": "dot"}, {"font": {"color": "white"}, "id": "phone", "label": "phone", "shape": "dot"}]);
+        edges = new vis.DataSet([{"from": "obama", "to": "O0"}, {"from": "O0", "to": "travel", "value": 418000000}, {"from": "O0", "to": "lodging", "value": 307000000}, {"from": "O0", "to": "agency", "value": 112000000}, {"from": "O0", "to": "fee", "value": 112000000}, {"from": "O0", "to": "facility", "value": 19000000}, {"from": "O0", "to": "catering", "value": 19000000}, {"from": "obama", "to": "O1"}, {"from": "O1", "to": "payroll", "value": 758000000}, {"from": "O1", "to": "tax", "value": 80000000}, {"from": "O1", "to": "computer", "value": 33000000}, {"from": "O1", "to": "equip", "value": 21000000}, {"from": "O1", "to": "contribution", "value": 17000000}, {"from": "O1", "to": "software", "value": 13000000}, {"from": "obama", "to": "O2"}, {"from": "O2", "to": "sound", "value": 177000000}, {"from": "O2", "to": "lighting", "value": 177000000}, {"from": "O2", "to": "staging", "value": 177000000}, {"from": "O2", "to": "rental", "value": 75000000}, {"from": "O2", "to": "site", "value": 75000000}, {"from": "O2", "to": "event", "value": 60000000}, {"from": "obama", "to": "O3"}, {"from": "O3", "to": "advertising ", "value": 185000000}, {"from": "O3", "to": "line ", "value": 126000000}, {"from": "O3", "to": "medium ", "value": 112000000}, {"from": "O3", "to": "production ", "value": 90000000}, {"from": "O3", "to": "exp ", "value": 90000000}, {"from": "O3", "to": "fee", "value": 61000000}, {"from": "obama", "to": "O4"}, {"from": "O4", "to": "per ", "value": 241000000}, {"from": "O4", "to": "diem ", "value": 241000000}, {"from": "O4", "to": "telephone ", "value": 129000000}, {"from": "O4", "to": "printing ", "value": 58000000}, {"from": "O4", "to": "office ", "value": 41000000}, {"from": "O4", "to": "supply", "value": 41000000}, {"from": "mccain", "to": "M0"}, {"from": "M0", "to": "payroll", "value": 175000000}, {"from": "M0", "to": "tax", "value": 31000000}, {"from": "M0", "to": "printing", "value": 31000000}, {"from": "M0", "to": "credit", "value": 25000000}, {"from": "mccain", "to": "M1"}, {"from": "M1", "to": "catering", "value": 52000000}, {"from": "M1", "to": "equipment", "value": 42000000}, {"from": "M1", "to": "petty", "value": 40000000}, {"from": "M1", "to": "cash", "value": 40000000}, {"from": "mccain", "to": "M2"}, {"from": "M2", "to": "travel", "value": 245000000}, {"from": "M2", "to": "transfer", "value": 78000000}, {"from": "M2", "to": "beverage", "value": 14000000}, {"from": "M2", "to": "food", "value": 14000000}, {"from": "mccain", "to": "M3"}, {"from": "M3", "to": "consulting", "value": 70000000}, {"from": "M3", "to": "gotv", "value": 45000000}, {"from": "M3", "to": "staging", "value": 27000000}, {"from": "M3", "to": "phone", "value": 20000000}]);
+
+        // adding nodes and edges to the graph
+        data = {nodes: nodes, edges: edges};
+
+        var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": false,
+            "type": "continuous"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "barnesHut": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.3,
+            "damping": 0.09,
+            "gravitationalConstant": -80000,
+            "springConstant": 0.001,
+            "springLength": 250
+        },
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+        
+        
+
+        
+
+        network = new vis.Network(container, data, options);
+
+        
+
+
+        
+
+        return network;
+
+    }
+
+    drawGraph();
+
+</script>
+</body>
+</html>

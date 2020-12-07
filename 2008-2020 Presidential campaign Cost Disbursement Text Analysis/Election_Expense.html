@@ -1,0 +1,212 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.css" type="text/css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis-network.min.js"> </script>
+<center>
+<h1>Election Expense Wordnet</h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+
+<style type="text/css">
+
+        #mynetwork {
+            width: 100%;
+            height: 750px;
+            background-color: #123456;
+            border: 1px solid lightgray;
+            position: relative;
+            float: left;
+        }
+
+        
+        #loadingBar {
+            position:absolute;
+            top:0px;
+            left:0px;
+            width: 100%;
+            height: 750px;
+            background-color:rgba(200,200,200,0.8);
+            -webkit-transition: all 0.5s ease;
+            -moz-transition: all 0.5s ease;
+            -ms-transition: all 0.5s ease;
+            -o-transition: all 0.5s ease;
+            transition: all 0.5s ease;
+            opacity:1;
+        }
+
+        #bar {
+            position:absolute;
+            top:0px;
+            left:0px;
+            width:20px;
+            height:20px;
+            margin:auto auto auto auto;
+            border-radius:11px;
+            border:2px solid rgba(30,30,30,0.05);
+            background: rgb(0, 173, 246); /* Old browsers */
+            box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+        }
+
+        #border {
+            position:absolute;
+            top:10px;
+            left:10px;
+            width:500px;
+            height:23px;
+            margin:auto auto auto auto;
+            box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+            border-radius:10px;
+        }
+
+        #text {
+            position:absolute;
+            top:8px;
+            left:530px;
+            width:30px;
+            height:50px;
+            margin:auto auto auto auto;
+            font-size:22px;
+            color: #000000;
+        }
+
+        div.outerBorder {
+            position:relative;
+            top:400px;
+            width:600px;
+            height:44px;
+            margin:auto auto auto auto;
+            border:8px solid rgba(0,0,0,0.1);
+            background: rgb(252,252,252); /* Old browsers */
+            background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+            background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+            background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+            background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+            background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+            border-radius:72px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+        }
+        
+
+        
+
+        
+</style>
+
+</head>
+
+<body>
+<div id = "mynetwork"></div>
+
+<div id="loadingBar">
+    <div class="outerBorder">
+        <div id="text">0%</div>
+        <div id="border">
+            <div id="bar"></div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    // initialize global variables.
+    var edges;
+    var nodes;
+    var network; 
+    var container;
+    var options, data;
+
+    
+    // This method is responsible for drawing the graph, returns the drawn network
+    function drawGraph() {
+        var container = document.getElementById('mynetwork');
+        
+        
+
+        // parsing and collecting nodes and edges from the python
+        nodes = new vis.DataSet([{"font": {"color": "white"}, "id": 2008, "label": 2008, "shape": "dot", "titile": "Election Year"}, {"font": {"color": "white"}, "id": "obama", "label": "obama", "shape": "dot", "titile": "Candidate"}, {"font": {"color": "white"}, "id": "O0", "label": "O0", "shape": "dot", "titile": "Topic"}, {"font": {"color": "white"}, "id": "travel", "label": "travel", "shape": "dot", "titile": "Word", "value": 4180}, {"font": {"color": "white"}, "id": "lodging", "label": "lodging", "shape": "dot", "titile": "Word", "value": 3070}, {"font": {"color": "white"}, "id": "agency", "label": "agency", "shape": "dot", "titile": "Word", "value": 1120}, {"font": {"color": "white"}, "id": "fee", "label": "fee", "shape": "dot", "titile": "Word", "value": 1120}, {"font": {"color": "white"}, "id": "facility", "label": "facility", "shape": "dot", "titile": "Word", "value": 190}, {"font": {"color": "white"}, "id": "catering", "label": "catering", "shape": "dot", "titile": "Word", "value": 190}, {"font": {"color": "white"}, "id": "O1", "label": "O1", "shape": "dot", "titile": "Topic"}, {"font": {"color": "white"}, "id": "payroll", "label": "payroll", "shape": "dot", "titile": "Word", "value": 7580}, {"font": {"color": "white"}, "id": "tax", "label": "tax", "shape": "dot", "titile": "Word", "value": 800}, {"font": {"color": "white"}, "id": "computer", "label": "computer", "shape": "dot", "titile": "Word", "value": 330}, {"font": {"color": "white"}, "id": "equip", "label": "equip", "shape": "dot", "titile": "Word", "value": 210}, {"font": {"color": "white"}, "id": "contribution", "label": "contribution", "shape": "dot", "titile": "Word", "value": 170}, {"font": {"color": "white"}, "id": "software", "label": "software", "shape": "dot", "titile": "Word", "value": 130}, {"font": {"color": "white"}, "id": "O2", "label": "O2", "shape": "dot", "titile": "Topic"}, {"font": {"color": "white"}, "id": "sound", "label": "sound", "shape": "dot", "titile": "Word", "value": 1770}, {"font": {"color": "white"}, "id": "lighting", "label": "lighting", "shape": "dot", "titile": "Word", "value": 1770}, {"font": {"color": "white"}, "id": "staging", "label": "staging", "shape": "dot", "titile": "Word", "value": 1770}, {"font": {"color": "white"}, "id": "rental", "label": "rental", "shape": "dot", "titile": "Word", "value": 750}, {"font": {"color": "white"}, "id": "site", "label": "site", "shape": "dot", "titile": "Word", "value": 750}, {"font": {"color": "white"}, "id": "event", "label": "event", "shape": "dot", "titile": "Word", "value": 600}, {"font": {"color": "white"}, "id": "O3", "label": "O3", "shape": "dot", "titile": "Topic"}, {"font": {"color": "white"}, "id": "advertising ", "label": "advertising ", "shape": "dot", "titile": "Word", "value": 1850}, {"font": {"color": "white"}, "id": "line ", "label": "line ", "shape": "dot", "titile": "Word", "value": 1260}, {"font": {"color": "white"}, "id": "medium ", "label": "medium ", "shape": "dot", "titile": "Word", "value": 1120}, {"font": {"color": "white"}, "id": "production ", "label": "production ", "shape": "dot", "titile": "Word", "value": 900}, {"font": {"color": "white"}, "id": "exp ", "label": "exp ", "shape": "dot", "titile": "Word", "value": 900}, {"font": {"color": "white"}, "id": "O4", "label": "O4", "shape": "dot", "titile": "Topic"}, {"font": {"color": "white"}, "id": "per ", "label": "per ", "shape": "dot", "titile": "Word", "value": 2410}, {"font": {"color": "white"}, "id": "diem ", "label": "diem ", "shape": "dot", "titile": "Word", "value": 2410}, {"font": {"color": "white"}, "id": "telephone ", "label": "telephone ", "shape": "dot", "titile": "Word", "value": 1290}, {"font": {"color": "white"}, "id": "printing ", "label": "printing ", "shape": "dot", "titile": "Word", "value": 580}, {"font": {"color": "white"}, "id": "office ", "label": "office ", "shape": "dot", "titile": "Word", "value": 410}, {"font": {"color": "white"}, "id": "supply", "label": "supply", "shape": "dot", "titile": "Word", "value": 410}, {"font": {"color": "white"}, "id": "mccain", "label": "mccain", "shape": "dot", "titile": "Candidate"}, {"font": {"color": "white"}, "id": "M0", "label": "M0", "shape": "dot", "titile": "Topic"}, {"font": {"color": "white"}, "id": "printing", "label": "printing", "shape": "dot", "titile": "Word", "value": 310}, {"font": {"color": "white"}, "id": "credit", "label": "credit", "shape": "dot", "titile": "Word", "value": 250}, {"font": {"color": "white"}, "id": "M1", "label": "M1", "shape": "dot", "titile": "Topic"}, {"font": {"color": "white"}, "id": "equipment", "label": "equipment", "shape": "dot", "titile": "Word", "value": 420}, {"font": {"color": "white"}, "id": "petty", "label": "petty", "shape": "dot", "titile": "Word", "value": 400}, {"font": {"color": "white"}, "id": "cash", "label": "cash", "shape": "dot", "titile": "Word", "value": 400}, {"font": {"color": "white"}, "id": "M2", "label": "M2", "shape": "dot", "titile": "Topic"}, {"font": {"color": "white"}, "id": "transfer", "label": "transfer", "shape": "dot", "titile": "Word", "value": 780}, {"font": {"color": "white"}, "id": "beverage", "label": "beverage", "shape": "dot", "titile": "Word", "value": 140}, {"font": {"color": "white"}, "id": "food", "label": "food", "shape": "dot", "titile": "Word", "value": 140}, {"font": {"color": "white"}, "id": "M3", "label": "M3", "shape": "dot", "titile": "Topic"}, {"font": {"color": "white"}, "id": "consulting", "label": "consulting", "shape": "dot", "titile": "Word", "value": 700}, {"font": {"color": "white"}, "id": "gotv", "label": "gotv", "shape": "dot", "titile": "Word", "value": 450}, {"font": {"color": "white"}, "id": "phone", "label": "phone", "shape": "dot", "titile": "Word", "value": 200}, {"font": {"color": "white"}, "id": 2012, "label": 2012, "shape": "dot", "titile": "Election Year"}, {"font": {"color": "white"}, "id": "parking", "label": "parking", "shape": "dot", "titile": "Word", "value": 110}, {"font": {"color": "white"}, "id": "chargeback", "label": "chargeback", "shape": "dot", "titile": "Word", "value": 1630}, {"font": {"color": "white"}, "id": "planning", "label": "planning", "shape": "dot", "titile": "Word", "value": 320}, {"font": {"color": "white"}, "id": "service", "label": "service", "shape": "dot", "titile": "Word", "value": 280}, {"font": {"color": "white"}, "id": "medium", "label": "medium", "shape": "dot", "titile": "Word", "value": 980}, {"font": {"color": "white"}, "id": "production", "label": "production", "shape": "dot", "titile": "Word", "value": 760}, {"font": {"color": "white"}, "id": "telephone", "label": "telephone", "shape": "dot", "titile": "Word", "value": 430}, {"font": {"color": "white"}, "id": "O5", "label": "O5", "shape": "dot", "titile": "Topic"}, {"font": {"color": "white"}, "id": "office", "label": "office", "shape": "dot", "titile": "Word", "value": 1850}, {"font": {"color": "white"}, "id": "romney", "label": "romney", "shape": "dot", "titile": "Candidate"}, {"font": {"color": "white"}, "id": "R0", "label": "R0", "shape": "dot", "titile": "Topic"}, {"font": {"color": "white"}, "id": "design", "label": "design", "shape": "dot", "titile": "Word", "value": 450}, {"font": {"color": "white"}, "id": "R1", "label": "R1", "shape": "dot", "titile": "Topic"}, {"font": {"color": "white"}, "id": "air", "label": "air", "shape": "dot", "titile": "Word", "value": 5900}, {"font": {"color": "white"}, "id": "purchase", "label": "purchase", "shape": "dot", "titile": "Word", "value": 350}, {"font": {"color": "white"}, "id": "R2", "label": "R2", "shape": "dot", "titile": "Topic"}, {"font": {"color": "white"}, "id": "ground", "label": "ground", "shape": "dot", "titile": "Word", "value": 1260}, {"font": {"color": "white"}, "id": "transportation", "label": "transportation", "shape": "dot", "titile": "Word", "value": 1260}, {"font": {"color": "white"}, "id": "R3", "label": "R3", "shape": "dot", "titile": "Topic"}, {"font": {"color": "white"}, "id": "bank", "label": "bank", "shape": "dot", "titile": "Word", "value": 3880}, {"font": {"color": "white"}, "id": "car", "label": "car", "shape": "dot", "titile": "Word", "value": 1130}, {"font": {"color": "white"}, "id": "expense", "label": "expense", "shape": "dot", "titile": "Word", "value": 350}, {"font": {"color": "white"}, "id": 2016, "label": 2016, "shape": "dot", "titile": "Election Year"}, {"font": {"color": "white"}, "id": "trump", "label": "trump", "shape": "dot", "titile": "Candidate"}, {"font": {"color": "white"}, "id": "T0", "label": "T0", "shape": "dot", "titile": "Topic"}, {"font": {"color": "white"}, "id": "T1", "label": "T1", "shape": "dot", "titile": "Topic"}, {"font": {"color": "white"}, "id": "T2", "label": "T2", "shape": "dot", "titile": "Topic"}, {"font": {"color": "white"}, "id": "T3", "label": "T3", "shape": "dot", "titile": "Topic"}, {"font": {"color": "white"}, "id": "svc", "label": "svc", "shape": "dot", "titile": "Word", "value": 540}, {"font": {"color": "white"}, "id": "T4", "label": "T4", "shape": "dot", "titile": "Topic"}, {"font": {"color": "white"}, "id": "hillary", "label": "hillary", "shape": "dot", "titile": "Candidate"}, {"font": {"color": "white"}, "id": "H0", "label": "H0", "shape": "dot", "titile": "Topic"}, {"font": {"color": "white"}, "id": "audio", "label": "audio", "shape": "dot", "titile": "Word", "value": 400}, {"font": {"color": "white"}, "id": "visual", "label": "visual", "shape": "dot", "titile": "Word", "value": 400}, {"font": {"color": "white"}, "id": "H1", "label": "H1", "shape": "dot", "titile": "Topic"}, {"font": {"color": "white"}, "id": "H2", "label": "H2", "shape": "dot", "titile": "Topic"}, {"font": {"color": "white"}, "id": "shipping", "label": "shipping", "shape": "dot", "titile": "Word", "value": 340}, {"font": {"color": "white"}, "id": "H3", "label": "H3", "shape": "dot", "titile": "Topic"}, {"font": {"color": "white"}, "id": "subsistence", "label": "subsistence", "shape": "dot", "titile": "Word", "value": 540}, {"font": {"color": "white"}, "id": 2020, "label": 2020, "shape": "dot", "titile": "Election Year"}, {"font": {"color": "white"}, "id": "transaction", "label": "transaction", "shape": "dot", "titile": "Word", "value": 1720}, {"font": {"color": "white"}, "id": "required", "label": "required", "shape": "dot", "titile": "Word", "value": 100}, {"font": {"color": "white"}, "id": "meeting", "label": "meeting", "shape": "dot", "titile": "Word", "value": 270}, {"font": {"color": "white"}, "id": "meal", "label": "meal", "shape": "dot", "titile": "Word", "value": 270}, {"font": {"color": "white"}, "id": "advance", "label": "advance", "shape": "dot", "titile": "Word", "value": 420}, {"font": {"color": "white"}, "id": "processing", "label": "processing", "shape": "dot", "titile": "Word", "value": 120}, {"font": {"color": "white"}, "id": "toll", "label": "toll", "shape": "dot", "titile": "Word", "value": 270}, {"font": {"color": "white"}, "id": "fuel", "label": "fuel", "shape": "dot", "titile": "Word", "value": 220}, {"font": {"color": "white"}, "id": "merchant", "label": "merchant", "shape": "dot", "titile": "Word", "value": 640}, {"font": {"color": "white"}, "id": "delivery", "label": "delivery", "shape": "dot", "titile": "Word", "value": 300}, {"font": {"color": "white"}, "id": "biden", "label": "biden", "shape": "dot", "titile": "Candidate"}, {"font": {"color": "white"}, "id": "B0", "label": "B0", "shape": "dot", "titile": "Topic"}, {"font": {"color": "white"}, "id": "utility", "label": "utility", "shape": "dot", "titile": "Word", "value": 750}, {"font": {"color": "white"}, "id": "strategic", "label": "strategic", "shape": "dot", "titile": "Word", "value": 520}, {"font": {"color": "white"}, "id": "B1", "label": "B1", "shape": "dot", "titile": "Topic"}, {"font": {"color": "white"}, "id": "subscription", "label": "subscription", "shape": "dot", "titile": "Word", "value": 510}, {"font": {"color": "white"}, "id": "B2", "label": "B2", "shape": "dot", "titile": "Topic"}, {"font": {"color": "white"}, "id": "vehicle", "label": "vehicle", "shape": "dot", "titile": "Word", "value": 490}, {"font": {"color": "white"}, "id": "B3", "label": "B3", "shape": "dot", "titile": "Topic"}, {"font": {"color": "white"}, "id": "copying", "label": "copying", "shape": "dot", "titile": "Word", "value": 520}, {"font": {"color": "white"}, "id": "license", "label": "license", "shape": "dot", "titile": "Word", "value": 190}, {"font": {"color": "white"}, "id": "internet", "label": "internet", "shape": "dot", "titile": "Word", "value": 190}, {"font": {"color": "white"}, "id": "polling", "label": "polling", "shape": "dot", "titile": "Word", "value": 190}, {"font": {"color": "white"}, "id": "B4", "label": "B4", "shape": "dot", "titile": "Topic"}, {"font": {"color": "white"}, "id": "per", "label": "per", "shape": "dot", "titile": "Word", "value": 560}, {"font": {"color": "white"}, "id": "diem", "label": "diem", "shape": "dot", "titile": "Word", "value": 560}]);
+        edges = new vis.DataSet([{"from": 2008, "to": "obama"}, {"from": "obama", "to": "O0"}, {"from": "O0", "to": "travel"}, {"from": "O0", "to": "lodging"}, {"from": "O0", "to": "agency"}, {"from": "O0", "to": "fee"}, {"from": "O0", "to": "facility"}, {"from": "O0", "to": "catering"}, {"from": "obama", "to": "O1"}, {"from": "O1", "to": "payroll"}, {"from": "O1", "to": "tax"}, {"from": "O1", "to": "computer"}, {"from": "O1", "to": "equip"}, {"from": "O1", "to": "contribution"}, {"from": "O1", "to": "software"}, {"from": "obama", "to": "O2"}, {"from": "O2", "to": "sound"}, {"from": "O2", "to": "lighting"}, {"from": "O2", "to": "staging"}, {"from": "O2", "to": "rental"}, {"from": "O2", "to": "site"}, {"from": "O2", "to": "event"}, {"from": "obama", "to": "O3"}, {"from": "O3", "to": "advertising "}, {"from": "O3", "to": "line "}, {"from": "O3", "to": "medium "}, {"from": "O3", "to": "production "}, {"from": "O3", "to": "exp "}, {"from": "O3", "to": "fee"}, {"from": "obama", "to": "O4"}, {"from": "O4", "to": "per "}, {"from": "O4", "to": "diem "}, {"from": "O4", "to": "telephone "}, {"from": "O4", "to": "printing "}, {"from": "O4", "to": "office "}, {"from": "O4", "to": "supply"}, {"from": 2008, "to": "mccain"}, {"from": "mccain", "to": "M0"}, {"from": "M0", "to": "payroll"}, {"from": "M0", "to": "tax"}, {"from": "M0", "to": "printing"}, {"from": "M0", "to": "credit"}, {"from": "mccain", "to": "M1"}, {"from": "M1", "to": "catering"}, {"from": "M1", "to": "equipment"}, {"from": "M1", "to": "petty"}, {"from": "M1", "to": "cash"}, {"from": "mccain", "to": "M2"}, {"from": "M2", "to": "travel"}, {"from": "M2", "to": "transfer"}, {"from": "M2", "to": "beverage"}, {"from": "M2", "to": "food"}, {"from": "mccain", "to": "M3"}, {"from": "M3", "to": "consulting"}, {"from": "M3", "to": "gotv"}, {"from": "M3", "to": "staging"}, {"from": "M3", "to": "phone"}, {"from": 2012, "to": "obama"}, {"from": "O0", "to": "parking"}, {"from": "O1", "to": "chargeback"}, {"from": "O1", "to": "equipment"}, {"from": "O1", "to": "sound"}, {"from": "O2", "to": "payroll"}, {"from": "O2", "to": "tax"}, {"from": "O2", "to": "planning"}, {"from": "O2", "to": "service"}, {"from": "O3", "to": "printing"}, {"from": "O3", "to": "medium"}, {"from": "O3", "to": "production"}, {"from": "O4", "to": "lodging"}, {"from": "O4", "to": "travel"}, {"from": "O4", "to": "telephone"}, {"from": "O4", "to": "event"}, {"from": "obama", "to": "O5"}, {"from": "O5", "to": "supply"}, {"from": "O5", "to": "office"}, {"from": "O5", "to": "catering"}, {"from": "O5", "to": "facility"}, {"from": 2012, "to": "romney"}, {"from": "romney", "to": "R0"}, {"from": "R0", "to": "payroll"}, {"from": "R0", "to": "service"}, {"from": "R0", "to": "catering"}, {"from": "R0", "to": "printing"}, {"from": "R0", "to": "design"}, {"from": "romney", "to": "R1"}, {"from": "R1", "to": "air"}, {"from": "R1", "to": "lodging"}, {"from": "R1", "to": "credit"}, {"from": "R1", "to": "purchase"}, {"from": "R1", "to": "office"}, {"from": "romney", "to": "R2"}, {"from": "R2", "to": "travel"}, {"from": "R2", "to": "food"}, {"from": "R2", "to": "ground"}, {"from": "R2", "to": "transportation"}, {"from": "R2", "to": "consulting"}, {"from": "romney", "to": "R3"}, {"from": "R3", "to": "fee"}, {"from": "R3", "to": "bank"}, {"from": "R3", "to": "rental"}, {"from": "R3", "to": "car"}, {"from": "R3", "to": "expense"}, {"from": 2016, "to": "trump"}, {"from": "trump", "to": "T0"}, {"from": "T0", "to": "rental"}, {"from": "T0", "to": "catering"}, {"from": "T0", "to": "service"}, {"from": "T0", "to": "equipment"}, {"from": "trump", "to": "T1"}, {"from": "T1", "to": "transfer"}, {"from": "T1", "to": "staging"}, {"from": "T1", "to": "food"}, {"from": "T1", "to": "beverage"}, {"from": "trump", "to": "T2"}, {"from": "T2", "to": "travel"}, {"from": "T2", "to": "purchase"}, {"from": "T2", "to": "equipment"}, {"from": "T2", "to": "gotv"}, {"from": "trump", "to": "T3"}, {"from": "T3", "to": "supply"}, {"from": "T3", "to": "office"}, {"from": "T3", "to": "svc"}, {"from": "T3", "to": "transportation"}, {"from": "trump", "to": "T4"}, {"from": "T4", "to": "payroll"}, {"from": "T4", "to": "tax"}, {"from": "T4", "to": "printing"}, {"from": "T4", "to": "consulting"}, {"from": 2016, "to": "hillary"}, {"from": "hillary", "to": "H0"}, {"from": "H0", "to": "service"}, {"from": "H0", "to": "printing"}, {"from": "H0", "to": "audio"}, {"from": "H0", "to": "visual"}, {"from": "hillary", "to": "H1"}, {"from": "H1", "to": "supply"}, {"from": "H1", "to": "event"}, {"from": "H1", "to": "office"}, {"from": "H1", "to": "production"}, {"from": "hillary", "to": "H2"}, {"from": "H2", "to": "payroll"}, {"from": "H2", "to": "phone"}, {"from": "H2", "to": "shipping"}, {"from": "H2", "to": "fee"}, {"from": "hillary", "to": "H3"}, {"from": "H3", "to": "travel"}, {"from": "H3", "to": "subsistence"}, {"from": "H3", "to": "catering"}, {"from": "H3", "to": "food"}, {"from": 2020, "to": "trump"}, {"from": "T0", "to": "fee"}, {"from": "T0", "to": "transaction"}, {"from": "T0", "to": "office"}, {"from": "T0", "to": "supply"}, {"from": "T0", "to": "travel"}, {"from": "T0", "to": "required"}, {"from": "T1", "to": "air"}, {"from": "T1", "to": "credit"}, {"from": "T1", "to": "expense"}, {"from": "T1", "to": "meeting"}, {"from": "T1", "to": "meal"}, {"from": "T2", "to": "payroll"}, {"from": "T2", "to": "consulting"}, {"from": "T2", "to": "service"}, {"from": "T2", "to": "software"}, {"from": "T2", "to": "advance"}, {"from": "T2", "to": "processing"}, {"from": "T3", "to": "ground"}, {"from": "T3", "to": "rental"}, {"from": "T3", "to": "car"}, {"from": "T3", "to": "toll"}, {"from": "T3", "to": "fuel"}, {"from": "T4", "to": "lodging"}, {"from": "T4", "to": "merchant"}, {"from": "T4", "to": "fee"}, {"from": "T4", "to": "expense"}, {"from": "T4", "to": "service"}, {"from": "T4", "to": "delivery"}, {"from": 2020, "to": "biden"}, {"from": "biden", "to": "B0"}, {"from": "B0", "to": "credit"}, {"from": "B0", "to": "consulting"}, {"from": "B0", "to": "lodging"}, {"from": "B0", "to": "utility"}, {"from": "B0", "to": "strategic"}, {"from": "B0", "to": "food"}, {"from": "biden", "to": "B1"}, {"from": "B1", "to": "supply"}, {"from": "B1", "to": "office"}, {"from": "B1", "to": "fee"}, {"from": "B1", "to": "processing"}, {"from": "B1", "to": "subscription"}, {"from": "B1", "to": "event"}, {"from": "biden", "to": "B2"}, {"from": "B2", "to": "travel"}, {"from": "B2", "to": "lodging"}, {"from": "B2", "to": "rental"}, {"from": "B2", "to": "medium"}, {"from": "B2", "to": "vehicle"}, {"from": "B2", "to": "production"}, {"from": "biden", "to": "B3"}, {"from": "B3", "to": "payroll"}, {"from": "B3", "to": "printing"}, {"from": "B3", "to": "copying"}, {"from": "B3", "to": "license"}, {"from": "B3", "to": "internet"}, {"from": "B3", "to": "polling"}, {"from": "biden", "to": "B4"}, {"from": "B4", "to": "service"}, {"from": "B4", "to": "parking"}, {"from": "B4", "to": "per"}, {"from": "B4", "to": "diem"}, {"from": "B4", "to": "fee"}, {"from": "B4", "to": "event"}]);
+
+        // adding nodes and edges to the graph
+        data = {nodes: nodes, edges: edges};
+
+        var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": false,
+            "type": "continuous"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "barnesHut": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.3,
+            "damping": 0.09,
+            "gravitationalConstant": -80000,
+            "springConstant": 0.001,
+            "springLength": 250
+        },
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+        
+        
+
+        
+
+        network = new vis.Network(container, data, options);
+
+        
+
+
+        
+        network.on("stabilizationProgress", function(params) {
+      		document.getElementById('loadingBar').removeAttribute("style");
+	        var maxWidth = 496;
+	        var minWidth = 20;
+	        var widthFactor = params.iterations/params.total;
+	        var width = Math.max(minWidth,maxWidth * widthFactor);
+
+	        document.getElementById('bar').style.width = width + 'px';
+	        document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+	    });
+	    network.once("stabilizationIterationsDone", function() {
+	        document.getElementById('text').innerHTML = '100%';
+	        document.getElementById('bar').style.width = '496px';
+	        document.getElementById('loadingBar').style.opacity = 0;
+	        // really clean the dom element
+	        setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+	    });
+        
+
+        return network;
+
+    }
+
+    drawGraph();
+
+</script>
+</body>
+</html>
