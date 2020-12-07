@@ -1,0 +1,19 @@
+Code:
+Campaign_Cost_Insights.ipynb
+2008_Obama_Mccain.ipyb
+2012_Obama_Romney.ipynb
+2016_Trump_Hillary.ipynb
+2020_Biden_Trump.ipynb
+
+Data:
+8 csv files
+
+pyvis wordnet:
+pyvis exploration.ipynb
+ew_data.csv
+2008_Election_Expense_Wordnet.html
+Election_Expense.html
+
+Demo pics:
+2008_Mccain.png
+2008_Obama.png
